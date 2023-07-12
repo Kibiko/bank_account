@@ -8,16 +8,20 @@ public class BankAccount {
     private String lastName;
     private LocalDate dateOfBirth;
     private int accountNumber;
-    private int balance;
+    private float balance;
+    private String accountType;
+    private float overdraft;
 
     //CONSTRUCTOR
 
-    public BankAccount(String first, String last, LocalDate dob, int account){
+    public BankAccount(String first, String last, LocalDate dob, int accountNum, String accountType){
         this.firstName = first;
         this.lastName = last;
         this.dateOfBirth = dob;
-        this.accountNumber = account;
-        this.balance = 0;
+        this.accountNumber = accountNum;
+        this.accountType = accountType;
+        this.balance = 0f;
+        this.overdraft = -2000f;
     }
 
     //BEHAVIOUR
@@ -54,19 +58,39 @@ public class BankAccount {
         this.accountNumber = account;
     }
 
-    public int getBalance(){
+    public float getBalance(){
         return this.balance;
     }
 
-    public void setBalance(int newBalance){
+    public void setBalance(float newBalance){
         this.balance = newBalance;
     }
 
-    public void deposit(int amount){
+    public void deposit(float amount){
         this.balance += amount;
     }
 
-    public void withdraw(int amount){
-        this.balance -= amount;
+    public void withdraw(float amount){
+        if ((this.balance - amount) >= overdraft){
+            this.balance -= amount;
+        } else{
+            System.out.println("Can not go below overdraft. Please top up your balance.");
+        }
+    }
+
+    public String getAccountType(){
+        return this.accountType;
+    }
+
+    public void setAccountType(String accountType){
+        this.accountType = accountType;
+    }
+
+    public void payInterest() {
+        if (this.accountType.equals("savings")) {
+            this.balance *= 1.05;
+        } else if (this.accountType.equals("current")){
+            this.balance *= 1.02;
+        }
     }
 }
